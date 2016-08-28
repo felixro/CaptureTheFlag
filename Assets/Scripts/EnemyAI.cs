@@ -32,7 +32,7 @@ public class EnemyAI : MonoBehaviour
     }
 
     public void SetTargets(
-        Transform flagTarget, 
+        GameObject flagTarget, 
         Transform playerTarget, 
         Transform homeBaseTarget
     )

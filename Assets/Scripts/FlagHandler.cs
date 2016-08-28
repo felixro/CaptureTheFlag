@@ -3,12 +3,19 @@ using System.Collections;
 
 public class FlagHandler : MonoBehaviour 
 {
+    public FlagType flagType;
+
     private GameObject flagHolder = null;
 
     private Vector3 localPosition;
     private Quaternion localRotation;
 
     private Vector3 defaultPosition;
+
+    void Start()
+    {
+        defaultPosition = transform.position;
+    }
 
     void Update()
     {
@@ -33,10 +40,7 @@ public class FlagHandler : MonoBehaviour
                 localPosition = new Vector3(0.8f, -0.05f, 0f);
                 localRotation = Quaternion.Euler(0f, 0f, -45f);
             }
-        }
 
-        if (localPosition != null && localRotation != null && flagHolder != null)
-        {
             transform.parent = flagHolder.transform;
             transform.localPosition = localPosition;
             transform.localRotation = localRotation;
@@ -50,16 +54,22 @@ public class FlagHandler : MonoBehaviour
             return;
         }
 
-        if (other.gameObject.tag == "Player" || other.gameObject.tag == "Enemy")
+        if (transform.position.Equals(defaultPosition))
+        {
+            // flag has not been moved yet
+            if (flagType == FlagType.PLAYER && other.gameObject.tag == "Enemy")
+            {
+                flagHolder = other.gameObject;
+            }
+            else if (flagType == FlagType.ENEMY && other.gameObject.tag == "Player")
+            {
+                flagHolder = other.gameObject;
+            }
+        }
+        else if (other.gameObject.tag == "Player" || other.gameObject.tag == "Enemy")
         {
             flagHolder = other.gameObject;
         }
-    }
-
-    public void SetDefaultPosition(Vector2 position)
-    {
-        defaultPosition = new Vector3(position.x, position.y, 2f);
-        transform.localPosition = position;
     }
 
     public void DropFlag()
@@ -80,5 +90,10 @@ public class FlagHandler : MonoBehaviour
     public bool HasFlagHolder()
     {
         return flagHolder != null;
+    }
+
+    public FlagType GetFlagType()
+    {
+        return flagType;
     }
 }

@@ -1,23 +1,28 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerAttackAction : IAction 
+public class PlayerAttackAction : AbstractAction 
 {
-    private Transform transform;
-
-    private Transform playerTarget;
-
     public PlayerAttackAction(
         Transform transform,
-        Transform playerTarget
-    )
+        Transform playerTarget,
+        GameObject flagGameObject,
+        Transform baseTarget
+    ) : base(transform, playerTarget, flagGameObject, baseTarget)
     {
-        this.transform = transform;
-        this.playerTarget = playerTarget;
+        
     }
 
-    public Transform GetCurrentTarget()
+    public override Transform GetCurrentTarget()
     {
+        Transform flagOwner = flagGameObject.transform.parent;
+
+        if (flagOwner != null && flagOwner.Equals(transform))
+        {
+            // we are carrying the flag - go back to base
+            return baseTarget;
+        }
+
         return playerTarget;
     }
 }

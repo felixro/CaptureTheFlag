@@ -6,13 +6,13 @@ public class Behavior : MonoBehaviour
 {
     public BehaviorType behaviorType;
 
-    public Transform flagTarget;
+    public GameObject flagGameObject;
     public Transform playerTarget;
     public Transform homeBaseTarget;
 
     private Transform currentTarget;
 
-    private IAction action;
+    private AbstractAction action;
 
 	void Start ()
     {
@@ -31,12 +31,12 @@ public class Behavior : MonoBehaviour
     }
 
     public void SetTargets(
-        Transform flagTarget, 
+        GameObject flagGameObject, 
         Transform playerTarget, 
         Transform homeBaseTarget
     )
     {
-        this.flagTarget = flagTarget;   
+        this.flagGameObject = flagGameObject;   
         this.playerTarget = playerTarget;
         this.homeBaseTarget = homeBaseTarget;
     }
@@ -51,13 +51,13 @@ public class Behavior : MonoBehaviour
         switch(behaviorType)
         {
         case BehaviorType.FLAG_ONLY:
-            action = new FlagGrabAction(transform, flagTarget, homeBaseTarget);
+            action = new FlagGrabAction(transform, playerTarget, flagGameObject, homeBaseTarget);
             break;
         case BehaviorType.PLAYER_ONLY:
-            action = new PlayerAttackAction(transform, playerTarget);
+            action = new PlayerAttackAction(transform, playerTarget, flagGameObject, homeBaseTarget);
             break;
         case BehaviorType.FLAG_AND_PLAYER:
-            action = new FlagAndAttackAction(transform, playerTarget, flagTarget, homeBaseTarget);
+            action = new FlagAndAttackAction(transform, playerTarget, flagGameObject, homeBaseTarget);
             break;
         default:
             currentTarget = playerTarget;

@@ -35,7 +35,7 @@ public class EnemySpawner : MonoBehaviour
             EnemyAI enemyAI = enemy.GetComponent<EnemyAI>();
 
             enemyAI.SetTargets(
-                playerFlag.transform, 
+                playerFlag, 
                 player.transform, 
                 enemyBase
             );

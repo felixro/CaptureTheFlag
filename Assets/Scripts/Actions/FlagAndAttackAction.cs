@@ -1,43 +1,50 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FlagAndAttackAction : IAction 
+public class FlagAndAttackAction : AbstractAction 
 {
-    private Transform transform;
-
-    private Transform playerTarget;
-    private Transform flagTarget;
-    private Transform baseTarget;
-
     private float distToFlagToGrab = 10f;
 
     public FlagAndAttackAction(
         Transform transform,
-        Transform playerTarget, 
-        Transform flagTarget, 
+        Transform playerTarget,
+        GameObject flagGameObject,
         Transform baseTarget
-    )
+    ) : base(transform, playerTarget, flagGameObject, baseTarget)
     {
-        this.transform = transform;
-        this.playerTarget = playerTarget;
-        this.flagTarget = flagTarget;
-        this.baseTarget = baseTarget;
+        
     }
 
-    public Transform GetCurrentTarget()
+    public override Transform GetCurrentTarget()
     {
-        if (transform.Find("Green Flag") != null)
+        Transform flagOwner = flagGameObject.transform.parent;
+
+        if (flagOwner != null)
         {
-            return baseTarget;
+            if (flagOwner.Equals(transform))
+            {
+                // we are carrying the flag - go back to base
+                return baseTarget;
+            }
+            else if (flagOwner.tag == "Enemy")
+            {
+                // one of the other "enemies" has the flag, go after the player
+                return playerTarget;
+            }
+            else
+            {
+                // player has the flag - go get him
+                return playerTarget;
+            }
         }
 
-        float curDistToFlag = Vector3.Distance(flagTarget.position, transform.position);
+        float curDistToFlag = Vector3.Distance(flagGameObject.transform.position, transform.position);
         float curDistToPlayer = Vector3.Distance(playerTarget.position, transform.position);
 
         // grab the flag if it is close enough and closer than the player
         if (curDistToFlag <= distToFlagToGrab && curDistToPlayer > curDistToFlag)
         {
-            return flagTarget;
+            return flagGameObject.transform;
         }
 
         return playerTarget;
