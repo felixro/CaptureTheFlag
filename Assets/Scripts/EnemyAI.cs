@@ -8,7 +8,8 @@ public class EnemyAI : MonoBehaviour
 {
     public float updateRate = 2f;
     public Path path;
-    public float speed = 300f;
+    public float speed = 5f;
+
     public ForceMode2D forceMode2D;
     public float nextWaypointDistance = 3f;
 
@@ -117,5 +118,15 @@ public class EnemyAI : MonoBehaviour
     public float GetMovementDirection()
     {
         return direction.GetMovementDirection();
+    }
+
+    public float GetSpeed()
+    {
+        return speed;
+    }
+
+    public void SetSpeed(float speed)
+    {
+        this.speed = speed;
     }
 }

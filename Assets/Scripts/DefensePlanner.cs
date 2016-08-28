@@ -8,16 +8,17 @@ public class DefensePlanner : MonoBehaviour
 
     public GameObject boxPrefab;
 
-    private bool isBuildingBox;
-    private bool isBuildingTurret;
+    public GameObject turretPrefab;
 
     private GameObject objectPreview;
+
+    private GameObject curPrefab;
 	
+    private bool buildObjectToggled = false;
+
     void Start()
     {
         isBuilderMode = false;
-        isBuildingBox = true;
-        isBuildingTurret = false;
 
         objectPreview = null;
     }
@@ -30,20 +31,23 @@ public class DefensePlanner : MonoBehaviour
             Destroy(objectPreview);
         }
 
+        if (buildObjectToggled)
+        {
+            Destroy(objectPreview);
+            buildObjectToggled = false;
+        }
+
         if (isBuilderMode && ! EventSystem.current.IsPointerOverGameObject())
         {
-            if (isBuildingBox)
+            if (objectPreview == null)
             {
-                if (objectPreview == null)
-                {
-                    Vector3 curPosition = GetCurrentMousePosition();
+                Vector3 curPosition = GetCurrentMousePosition();
 
-                    objectPreview = Instantiate(boxPrefab, curPosition, Quaternion.identity) as GameObject;
+                objectPreview = Instantiate(curPrefab, curPosition, Quaternion.identity) as GameObject;
 
-                    // need to make the preview object non-kinematic in order for collision to work
-                    Rigidbody2D rb = objectPreview.GetComponent<Rigidbody2D>();
-                    rb.isKinematic = false;
-                }
+                // need to make the preview object non-kinematic in order for collision to work
+                Rigidbody2D rb = objectPreview.GetComponent<Rigidbody2D>();
+                rb.isKinematic = false;
             }
         }
 
@@ -67,7 +71,7 @@ public class DefensePlanner : MonoBehaviour
 
             if (placement.GetCanPlaceHere())
             {
-                Instantiate(boxPrefab, GetCurrentMousePosition(), Quaternion.identity);
+                Instantiate(curPrefab, GetCurrentMousePosition(), Quaternion.identity);
 
                 Destroy(objectPreview);
             }
@@ -76,17 +80,24 @@ public class DefensePlanner : MonoBehaviour
 
     public void SetBuilderMode(bool toggle)
     {
+        if (curPrefab == null)
+        {
+            curPrefab = boxPrefab;
+        }
+
         isBuilderMode = toggle;
     }
 
     public void SetIsBuildingBox(bool toggle)
     {
-        isBuildingBox = toggle;
+        buildObjectToggled = true;
+        curPrefab = boxPrefab;
     }
 
     public void SetIsBuildingTurret(bool toggle)
     {
-        isBuildingTurret = toggle;
+        buildObjectToggled = true;
+        curPrefab = turretPrefab;
     }
 
     private Vector3 GetCurrentMousePosition()
