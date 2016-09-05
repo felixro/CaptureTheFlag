@@ -136,6 +136,7 @@
      <Compile Include="Assets\Scripts\DefensePlanner.cs" />
      <Compile Include="Assets\Scripts\EnemyAI.cs" />
      <Compile Include="Assets\Scripts\EnemyHitHandler.cs" />
+     <Compile Include="Assets\Scripts\EnemyProperty.cs" />
      <Compile Include="Assets\Scripts\EnemySpawner.cs" />
      <Compile Include="Assets\Scripts\FlagHandler.cs" />
      <Compile Include="Assets\Scripts\FlagType.cs" />
